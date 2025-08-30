@@ -3,8 +3,8 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 290)
-frame.Position = UDim2.new(0.5, -125, 0.5, -145)
+frame.Size = UDim2.new(0, 250, 0, 340)
+frame.Position = UDim2.new(0.5, -125, 0.5, -170)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.Active = true
 frame.Draggable = true
@@ -33,17 +33,25 @@ toggleBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleBtn.Parent = frame
 
-local anchorBtn = Instance.new("TextButton")
-anchorBtn.Size = UDim2.new(1, -20, 0, 40)
-anchorBtn.Position = UDim2.new(0, 10, 0, 150)
-anchorBtn.Text = "Anchor gubby: off"
-anchorBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-anchorBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-anchorBtn.Parent = frame
+local anchorMainBtn = Instance.new("TextButton")
+anchorMainBtn.Size = UDim2.new(1, -20, 0, 40)
+anchorMainBtn.Position = UDim2.new(0, 10, 0, 150)
+anchorMainBtn.Text = "Anchor main gubby: off"
+anchorMainBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+anchorMainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+anchorMainBtn.Parent = frame
+
+local anchorOthersBtn = Instance.new("TextButton")
+anchorOthersBtn.Size = UDim2.new(1, -20, 0, 40)
+anchorOthersBtn.Position = UDim2.new(0, 10, 0, 200)
+anchorOthersBtn.Text = "Anchor other gubbies: off"
+anchorOthersBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+anchorOthersBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+anchorOthersBtn.Parent = frame
 
 local deleteBtn = Instance.new("TextButton")
 deleteBtn.Size = UDim2.new(1, -20, 0, 40)
-deleteBtn.Position = UDim2.new(0, 10, 0, 200)
+deleteBtn.Position = UDim2.new(0, 10, 0, 250)
 deleteBtn.Text = "Delete other Gubbies"
 deleteBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
 deleteBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -52,57 +60,89 @@ deleteBtn.Parent = frame
 local source = game.ReplicatedStorage.GameAssets.Objects.GubbySkins
 local target = game.Workspace.Gubbies
 local gubby = target:WaitForChild("RegularGubby")
+
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
 local burn = gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
 
+local originalGubbies = {}
+for _, child in pairs(target:GetChildren()) do
+	originalGubbies[child.Name] = true
+end
+
 cloneBtn.MouseButton1Click:Connect(function()
-    for _, child in pairs(source:GetChildren()) do
-        if not target:FindFirstChild(child.Name) then
-            local clone = child:Clone()
-            clone.Parent = target
-        end
-    end
+	for _, child in pairs(source:GetChildren()) do
+		if not target:FindFirstChild(child.Name) then
+			local clone = child:Clone()
+			clone.Parent = target
+		end
+	end
 end)
 
 local running = false
 toggleBtn.MouseButton1Click:Connect(function()
-    running = not running
-    toggleBtn.Text = running and "Stop inf money" or "Start inf money"
-    if running then
-        task.spawn(function()
-            while running do
-                for _ = 1, 100 do
-                    voidDamage:FireServer(Vector3.new(-5.273, 4.99, 0.0016))
-                    game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
-                    game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
-                    game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
-                    task.wait()
-                end
-                if burn then
-                    for _ = 1, 10 do
-                        burn:Fire()
-                        task.wait()
-                    end
-                end
-                task.wait()
-            end
-        end)
-    end
+	running = not running
+	toggleBtn.Text = running and "Stop inf money" or "Start inf money"
+	if running then
+		task.spawn(function()
+			while running do
+				for _ = 1, 100 do
+					voidDamage:FireServer(Vector3.new(-5.273, 4.99, 0.0016))
+					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
+					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
+					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
+					task.wait()
+				end
+				if burn then
+					for _ = 1, 10 do
+						burn:Fire()
+						task.wait()
+					end
+				end
+				task.wait()
+			end
+		end)
+	end
 end)
 
-local anchored = false
-anchorBtn.MouseButton1Click:Connect(function()
-    if gubby and gubby:FindFirstChild("RootPart") then
-        anchored = not anchored
-        gubby.RootPart.Anchored = anchored
-        anchorBtn.Text = anchored and "Anchor gubby: on" or "Anchor gubby: off"
-    end
+local mainAnchored = false
+anchorMainBtn.MouseButton1Click:Connect(function()
+	if gubby and gubby:FindFirstChild("RootPart") then
+		mainAnchored = not mainAnchored
+		gubby.RootPart.Anchored = mainAnchored
+		anchorMainBtn.Text = mainAnchored and "Anchor main gubby: on" or "Anchor main gubby: off"
+	end
+end)
+
+local othersAnchored = false
+anchorOthersBtn.MouseButton1Click:Connect(function()
+	othersAnchored = not othersAnchored
+	for _, child in pairs(target:GetChildren()) do
+		if not originalGubbies[child.Name] and child:FindFirstChild("RootPart") then
+			child.RootPart.Anchored = othersAnchored
+		end
+	end
+	anchorOthersBtn.Text = othersAnchored and "Anchor other gubbies: on" or "Anchor other gubbies: off"
 end)
 
 deleteBtn.MouseButton1Click:Connect(function()
-    for _, child in pairs(target:GetChildren()) do
-        if child.Name ~= "RegularGubby" then
-            child:Destroy()
-        end
-    end
+	for _, child in pairs(target:GetChildren()) do
+		if not originalGubbies[child.Name] then
+			child:Destroy()
+		end
+	end
+end)
+
+local tool = Instance.new("Tool")
+tool.Name = "Anchor Gubby Tool"
+tool.RequiresHandle = false
+tool.Parent = player.Backpack
+
+tool.Activated:Connect(function()
+	local mouse = player:GetMouse()
+	if mouse.Target and mouse.Target.Parent and target:FindFirstChild(mouse.Target.Parent.Name) then
+		local gubbyClicked = mouse.Target.Parent
+		if gubbyClicked:FindFirstChild("RootPart") then
+			gubbyClicked.RootPart.Anchored = not gubbyClicked.RootPart.Anchored
+		end
+	end
 end)
