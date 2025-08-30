@@ -4,8 +4,8 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 340)
-frame.Position = UDim2.new(0.5, -125, 0.5, -170)
+frame.Size = UDim2.new(0, 250, 0, 380)
+frame.Position = UDim2.new(0.5, -125, 0.5, -190)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.Active = true
 frame.Draggable = true
@@ -34,9 +34,17 @@ toggleBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleBtn.Parent = frame
 
+local autoFuelBtn = Instance.new("TextButton")
+autoFuelBtn.Size = UDim2.new(1, -20, 0, 40)
+autoFuelBtn.Position = UDim2.new(0, 10, 0, 150)
+autoFuelBtn.Text = "Auto re-fill fuel: off"
+autoFuelBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+autoFuelBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoFuelBtn.Parent = frame
+
 local anchorMainBtn = Instance.new("TextButton")
 anchorMainBtn.Size = UDim2.new(1, -20, 0, 40)
-anchorMainBtn.Position = UDim2.new(0, 10, 0, 150)
+anchorMainBtn.Position = UDim2.new(0, 10, 0, 200)
 anchorMainBtn.Text = "Anchor main gubby: off"
 anchorMainBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 anchorMainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -44,7 +52,7 @@ anchorMainBtn.Parent = frame
 
 local anchorOthersBtn = Instance.new("TextButton")
 anchorOthersBtn.Size = UDim2.new(1, -20, 0, 40)
-anchorOthersBtn.Position = UDim2.new(0, 10, 0, 200)
+anchorOthersBtn.Position = UDim2.new(0, 10, 0, 250)
 anchorOthersBtn.Text = "Anchor other gubbies: off"
 anchorOthersBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 anchorOthersBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -52,7 +60,7 @@ anchorOthersBtn.Parent = frame
 
 local deleteBtn = Instance.new("TextButton")
 deleteBtn.Size = UDim2.new(1, -20, 0, 40)
-deleteBtn.Position = UDim2.new(0, 10, 0, 250)
+deleteBtn.Position = UDim2.new(0, 10, 0, 300)
 deleteBtn.Text = "Delete other Gubbies"
 deleteBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
 deleteBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -63,6 +71,7 @@ local target = game.Workspace.Gubbies
 local gubby = target:WaitForChild("RegularGubby")
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
 local burn = gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
+local purchaseGas = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.PurchaseGas
 
 local originalGubbies = {}
 for _, child in pairs(target:GetChildren()) do
@@ -90,8 +99,6 @@ toggleBtn.MouseButton1Click:Connect(function()
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
-					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("CherryBomb", Vector3.new(-9.395929336547852, 3.840543746948242, -0.0019435639260336757))
-					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("RatPoison", Vector3.new(-9.395929336547852, 3.840543746948242, -0.0019435639260336757))
 					task.wait()
 				end
 				if burn then
@@ -100,6 +107,20 @@ toggleBtn.MouseButton1Click:Connect(function()
 						task.wait()
 					end
 				end
+				task.wait()
+			end
+		end)
+	end
+end)
+
+local fuelRunning = false
+autoFuelBtn.MouseButton1Click:Connect(function()
+	fuelRunning = not fuelRunning
+	autoFuelBtn.Text = fuelRunning and "Auto re-fill fuel: on" or "Auto re-fill fuel: off"
+	if fuelRunning then
+		task.spawn(function()
+			while fuelRunning do
+				purchaseGas:FireServer(10)
 				task.wait()
 			end
 		end)
