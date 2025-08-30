@@ -1,3 +1,5 @@
+-- by yxc
+
 local player = game.Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 local screenGui = Instance.new("ScreenGui")
