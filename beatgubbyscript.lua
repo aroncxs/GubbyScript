@@ -90,6 +90,8 @@ toggleBtn.MouseButton1Click:Connect(function()
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
 					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
+					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("CherryBomb", Vector3.new(-9.395929336547852, 3.840543746948242, -0.0019435639260336757))
+					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("RatPoison", Vector3.new(-9.395929336547852, 3.840543746948242, -0.0019435639260336757))
 					task.wait()
 				end
 				if burn then
