@@ -70,7 +70,6 @@ local source = game.ReplicatedStorage.GameAssets.Objects.GubbySkins
 local target = game.Workspace.Gubbies
 local gubby = target:WaitForChild("RegularGubby")
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
-local burn = gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
 local purchaseGas = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.PurchaseGas
 
 local originalGubbies = {}
@@ -95,16 +94,11 @@ toggleBtn.MouseButton1Click:Connect(function()
 		task.spawn(function()
 			while running do
 				voidDamage:FireServer(Vector3.new(-5.273, 4.99, 0.0016))
-				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
-				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
-				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
-				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("CherryBomb", Vector3.new(-9.3959, 3.8405, -0.00194))
-				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("RatPoison", Vector3.new(-9.3959, 3.8405, -0.00194))
-				if burn then
-					for _ = 1, 10 do
-						burn:Fire()
-					end
-				end
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(0, 0, 0), 999.99)
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(0, 0, 0))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(0, 0, 0))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("CherryBomb", Vector3.new(0, 0, 0))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("RatPoison", Vector3.new(0, 0, 0))
 				task.wait()
 			end
 		end)
