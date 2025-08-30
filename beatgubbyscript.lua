@@ -4,8 +4,8 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 380)
-frame.Position = UDim2.new(0.5, -125, 0.5, -190)
+frame.Size = UDim2.new(0, 250, 0, 420)
+frame.Position = UDim2.new(0.5, -125, 0.5, -210)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.Active = true
 frame.Draggable = true
@@ -94,17 +94,15 @@ toggleBtn.MouseButton1Click:Connect(function()
 	if running then
 		task.spawn(function()
 			while running do
-				for _ = 1, 100 do
-					voidDamage:FireServer(Vector3.new(-5.273, 4.99, 0.0016))
-					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
-					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
-					game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
-					task.wait()
-				end
+				voidDamage:FireServer(Vector3.new(-5.273, 4.99, 0.0016))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage:FireServer(Vector3.new(11.01, 3.09, -0.00044), 3.11)
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage:FireServer(Vector3.new(-0.81, 4.52, 0))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage:FireServer(333.54, Vector3.new(19.89, 9.54, 0.025))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("CherryBomb", Vector3.new(-9.3959, 3.8405, -0.00194))
+				game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage:FireServer("RatPoison", Vector3.new(-9.3959, 3.8405, -0.00194))
 				if burn then
 					for _ = 1, 10 do
 						burn:Fire()
-						task.wait()
 					end
 				end
 				task.wait()
@@ -116,7 +114,7 @@ end)
 local fuelRunning = false
 autoFuelBtn.MouseButton1Click:Connect(function()
 	fuelRunning = not fuelRunning
-	autoFuelBtn.Text = fuelRunning and "Auto re-fill fuel: on" or "Auto re-fill fuel: off"
+	autoFuelBtn.Text = fuelRunning and "Auto refill fuel: on" or "Auto refill fuel: off"
 	if fuelRunning then
 		task.spawn(function()
 			while fuelRunning do
