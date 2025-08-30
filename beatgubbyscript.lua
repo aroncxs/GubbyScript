@@ -1,4 +1,5 @@
 local player = game.Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
@@ -60,7 +61,6 @@ deleteBtn.Parent = frame
 local source = game.ReplicatedStorage.GameAssets.Objects.GubbySkins
 local target = game.Workspace.Gubbies
 local gubby = target:WaitForChild("RegularGubby")
-
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
 local burn = gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
 
@@ -144,5 +144,11 @@ tool.Activated:Connect(function()
 		if gubbyClicked:FindFirstChild("RootPart") then
 			gubbyClicked.RootPart.Anchored = not gubbyClicked.RootPart.Anchored
 		end
+	end
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if not gameProcessed and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.LeftControl then
+		frame.Visible = not frame.Visible
 	end
 end)
