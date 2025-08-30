@@ -132,21 +132,6 @@ deleteBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
-local tool = Instance.new("Tool")
-tool.Name = "Anchor Gubby Tool"
-tool.RequiresHandle = false
-tool.Parent = player.Backpack
-
-tool.Activated:Connect(function()
-	local mouse = player:GetMouse()
-	if mouse.Target and mouse.Target.Parent and target:FindFirstChild(mouse.Target.Parent.Name) then
-		local gubbyClicked = mouse.Target.Parent
-		if gubbyClicked:FindFirstChild("RootPart") then
-			gubbyClicked.RootPart.Anchored = not gubbyClicked.RootPart.Anchored
-		end
-	end
-end)
-
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if not gameProcessed and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.LeftControl then
 		frame.Visible = not frame.Visible
