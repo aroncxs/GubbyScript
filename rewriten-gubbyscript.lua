@@ -29,26 +29,23 @@ local function getGubby()
     return nil
 end
 
-local gubby = getGubby()
-
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
 local airstrikeDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage
 local smiteDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.SmiteDamage
 local physicsDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage
 local foodDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage
 local purchaseGas = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.PurchaseGas
-local burn = gubby and gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
 
 local mainAnchored = false
 local fuelRunning = false
 local infDamageRunning = false
 
-local function anchorchildren(model, value)
+local function anchorchildren(model)
     for _, child in pairs(model:GetChildren()) do
         if child:IsA("BasePart") then
-            child.Anchored = value
+            child.Anchored = mainAnchored
         elseif #child:GetChildren() > 0 then
-            anchorchildren(child, value)
+            anchorchildren(child)
         end
     end
 end
@@ -64,7 +61,7 @@ Tab:CreateToggle({
            if gubby:FindFirstChild("RootPart") then
                gubby.RootPart.Anchored = mainAnchored
            end
-           anchorchildren(gubby, mainAnchored)
+           anchorchildren(gubby)
        end
    end
 })
@@ -106,4 +103,36 @@ Tab:CreateToggle({
            end)
        end
    end
+})
+
+local TabOthers = Window:CreateTab("Others", 4483362458)
+
+local function getCurrentGubby()
+    return getGubby()
+end
+
+TabOthers:CreateButton({
+    Name = "Burn Gubby",
+    Callback = function()
+        local gubby = getCurrentGubby()
+        if gubby and gubby:FindFirstChild("GubbyEvents") then
+            local burnEvent = gubby.GubbyEvents:FindFirstChild("Burn")
+            if burnEvent then
+                burnEvent:Fire()
+            end
+        end
+    end
+})
+
+TabOthers:CreateButton({
+    Name = "Knockout Gubby",
+    Callback = function()
+        local gubby = getCurrentGubby()
+        if gubby and gubby:FindFirstChild("GubbyEvents") then
+            local koEvent = gubby.GubbyEvents:FindFirstChild("KnockOut")
+            if koEvent then
+                koEvent:Fire()
+            end
+        end
+    end
 })
