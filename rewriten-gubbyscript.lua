@@ -18,7 +18,18 @@ local Tab = Window:CreateTab("Main", 4483362458)
 
 local player = game.Players.LocalPlayer
 local target = game.Workspace.Gubbies
-local gubby = target:WaitForChild("RegularGubby")
+
+local variants = {"RegularGubby", "FatGubby", "PancakeGubby", "StormcellGubby"}
+local function getGubby()
+    for _, name in ipairs(variants) do
+        if target:FindFirstChild(name) then
+            return target[name]
+        end
+    end
+    return nil
+end
+
+local gubby = getGubby()
 
 local voidDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.VoidDamage
 local airstrikeDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.AirstrikeDamage
@@ -26,11 +37,21 @@ local smiteDamage = game:GetService("ReplicatedStorage").Networking.Server.Remot
 local physicsDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.PhysicsDamage
 local foodDamage = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.DamageEvents.FoodDamage
 local purchaseGas = game:GetService("ReplicatedStorage").Networking.Server.RemoteEvents.PurchaseGas
-local burn = gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
+local burn = gubby and gubby:FindFirstChild("GubbyEvents") and gubby.GubbyEvents:FindFirstChild("Burn")
 
 local mainAnchored = false
 local fuelRunning = false
 local infDamageRunning = false
+
+local function anchorchildren(model)
+    for _, child in pairs(model:GetChildren()) do
+        if child:IsA("BasePart") then
+            child.Anchored = true
+        elseif #child:GetChildren() > 0 then
+            anchorchildren(child)
+        end
+    end
+end
 
 Tab:CreateToggle({
    Name = "Anchor Main Gubby",
@@ -38,8 +59,14 @@ Tab:CreateToggle({
    Flag = "AnchorMainGubby",
    Callback = function(value)
        mainAnchored = value
-       if gubby and gubby:FindFirstChild("RootPart") then
-           gubby.RootPart.Anchored = mainAnchored
+       local gubby = getGubby()
+       if gubby then
+           if gubby:FindFirstChild("RootPart") then
+               gubby.RootPart.Anchored = mainAnchored
+           end
+           if mainAnchored then
+               anchorchildren(gubby)
+           end
        end
    end
 })
