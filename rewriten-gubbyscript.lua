@@ -84,7 +84,7 @@ Tab:CreateToggle({
 })
 
 Tab:CreateToggle({
-   Name = "Inf Damage",
+   Name = "Auto Farm (~350k/s)",
    CurrentValue = false,
    Flag = "InfDamage",
    Callback = function(value)
