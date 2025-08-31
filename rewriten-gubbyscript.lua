@@ -43,12 +43,12 @@ local mainAnchored = false
 local fuelRunning = false
 local infDamageRunning = false
 
-local function anchorchildren(model)
+local function anchorchildren(model, value)
     for _, child in pairs(model:GetChildren()) do
         if child:IsA("BasePart") then
-            child.Anchored = true
+            child.Anchored = value
         elseif #child:GetChildren() > 0 then
-            anchorchildren(child)
+            anchorchildren(child, value)
         end
     end
 end
@@ -64,9 +64,7 @@ Tab:CreateToggle({
            if gubby:FindFirstChild("RootPart") then
                gubby.RootPart.Anchored = mainAnchored
            end
-           if mainAnchored then
-               anchorchildren(gubby)
-           end
+           anchorchildren(gubby, mainAnchored)
        end
    end
 })
